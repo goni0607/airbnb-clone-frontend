@@ -1,6 +1,6 @@
 import { Box, Button, HStack, IconButton, Stack, useColorMode, useColorModeValue, useDisclosure } from '@chakra-ui/react'
-import React from 'react'
 import { FaAirbnb, FaMoon, FaSun } from 'react-icons/fa'
+import { Link } from 'react-router-dom';
 import LoginModal from './LoginModal'
 import SignUpModal from './SignUpModal';
 
@@ -19,9 +19,11 @@ export default function Header() {
       alignItems={"center"}
       spacing={{ base: 3, md: 0}}
       direction={{ base: "column", md: "row" }}>
-      <Box color={"red.500"}>
-        <FaAirbnb size={40} />
-      </Box>
+      <Link to="/">
+        <Box color={"red.500"}>
+          <FaAirbnb size={40} />
+        </Box>
+      </Link>
       <HStack>
         <IconButton 
           onClick={toggleColorMode}
