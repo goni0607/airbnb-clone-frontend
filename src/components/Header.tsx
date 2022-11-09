@@ -11,7 +11,7 @@ export default function Header() {
   const IconColorMode = useColorModeValue(FaMoon, FaSun);
   const labelColorMode = useColorModeValue('Toggle dark mode', 'Toggle light mode');
   return (
-    <HStack py={5} px={10} borderBottomWidth={1} justifyContent={"space-between"}>
+    <HStack py={5} px={20} borderBottomWidth={1} justifyContent={"space-between"}>
     <Box color={"red.500"}>
       <FaAirbnb size={40} />
     </Box>
