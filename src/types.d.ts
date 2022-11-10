@@ -30,6 +30,7 @@ export interface IRoomDetail extends IRoomList {
     created_at: string;
     updated_at: string;
     toilets: number;
+    rooms: number;
     description: string;
     address: string;
     pet_friendly: boolean;
@@ -42,4 +43,10 @@ export interface IRoomDetail extends IRoomList {
     };
     owner: IRoomOwner;
     amenities: IAmenity[];
+}
+
+export interface IReview {
+    user: IRoomOwner;
+    payload: string;
+    rating: number;
 }

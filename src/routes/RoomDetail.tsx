@@ -1,15 +1,20 @@
 import {
+  Avatar,
   Box,
   Grid,
   GridItem,
   Heading,
+  HStack,
   Image,
   Skeleton,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { getRoom } from "../api";
-import { IRoomDetail } from "../types";
+import { getRoom, getRoomReviews } from "../api";
+import { IReview, IRoomDetail } from "../types";
 
 export default function RoomDetail() {
   const { roomPk } = useParams();
@@ -17,6 +22,9 @@ export default function RoomDetail() {
     ["/rooms/", roomPk],
     getRoom
   );
+  const { isLoading: isReviewsLoading, data: reviewsData } = useQuery<
+    IReview[]
+  >(["rooms", roomPk, "reviews"], getRoomReviews);
   console.log(data);
   return (
     <Box px={{ base: 5, md: 10, xl: 20 }} my={10}>
@@ -50,6 +58,35 @@ export default function RoomDetail() {
           </GridItem>
         ))}
       </Grid>
+      <HStack mt={10} justifyContent={"space-between"} w="60%">
+        <VStack alignItems={"flex-start"}>
+          <Skeleton isLoaded={!isLoading}>
+            <Heading as={"h3"} size={"lg"}>
+              House hosted by {data?.owner.name}
+            </Heading>
+          </Skeleton>
+          <Skeleton isLoaded={!isLoading}>
+            <HStack justifyContent={"flex-start"} w="100%">
+              <Text>{data?.toilets} toliets</Text>
+              <Text>&middot;</Text>
+              <Text>{data?.rooms} rooms</Text>
+            </HStack>
+          </Skeleton>
+        </VStack>
+        <Avatar size={"lg"} name={data?.owner.name} src={data?.owner.avatar} />
+      </HStack>
+
+      {/* Reviews Area */}
+      <Box mt={10}>
+        <Heading as={"h3"} size={"lg"}>
+          <HStack>
+            <FaStar />
+            <Text>{data?.rating}</Text>
+            <Text>&middot;</Text>
+            <Text>{reviewsData?.length} reviews</Text>
+          </HStack>
+        </Heading>
+      </Box>
     </Box>
   );
 }

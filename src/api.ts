@@ -13,3 +13,9 @@ export const getRoom = ({queryKey}: QueryFunctionContext) => {
     const [urlPath, roomPk] = queryKey;
     return axiosInstance.get(`${urlPath}${roomPk}`).then(response => response.data);
 }
+
+
+export const getRoomReviews = ({queryKey}: QueryFunctionContext) => {
+    const [, roomPk] = queryKey;
+    return axiosInstance.get(`/rooms/${roomPk}/reviews`).then(response => response.data);
+}
