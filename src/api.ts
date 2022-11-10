@@ -1,3 +1,4 @@
+import Cookie from "js-cookie";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -29,4 +30,10 @@ export const getMe = async () => {
 };
 
 export const logOut = async () =>
-  await axiosInstance.post(`/users/log-out/`).then((response) => response.data);
+  await axiosInstance
+    .post(`/users/log-out/`, null, {
+      headers: {
+        "X-CSRFToken": Cookie.get("csrftoken") || "",
+      },
+    })
+    .then((response) => response.data);

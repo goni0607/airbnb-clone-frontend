@@ -11,12 +11,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { getRoom, getRoomReviews } from "../api";
-import Review from "../components/Review";
+import { getRoom } from "../api";
 import ReviewList from "../components/ReviewList";
-import { IReview, IRoomDetail } from "../types";
+import { IRoomDetail } from "../types";
 
 export default function RoomDetail() {
   const { roomPk } = useParams();
