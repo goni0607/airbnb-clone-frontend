@@ -14,6 +14,8 @@ import { useQuery } from "@tanstack/react-query";
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { getRoom, getRoomReviews } from "../api";
+import Review from "../components/Review";
+import ReviewList from "../components/ReviewList";
 import { IReview, IRoomDetail } from "../types";
 
 export default function RoomDetail() {
@@ -22,10 +24,7 @@ export default function RoomDetail() {
     ["/rooms/", roomPk],
     getRoom
   );
-  const { isLoading: isReviewsLoading, data: reviewsData } = useQuery<
-    IReview[]
-  >(["rooms", roomPk, "reviews"], getRoomReviews);
-  console.log(data);
+
   return (
     <Box px={{ base: 5, md: 10, xl: 20 }} my={10}>
       <Skeleton isLoaded={!isLoading} h={9}>
@@ -58,34 +57,31 @@ export default function RoomDetail() {
           </GridItem>
         ))}
       </Grid>
-      <HStack mt={10} justifyContent={"space-between"} w="60%">
-        <VStack alignItems={"flex-start"}>
-          <Skeleton isLoaded={!isLoading}>
-            <Heading as={"h3"} size={"lg"}>
-              House hosted by {data?.owner.name}
-            </Heading>
-          </Skeleton>
-          <Skeleton isLoaded={!isLoading}>
-            <HStack justifyContent={"flex-start"} w="100%">
-              <Text>{data?.toilets} toliets</Text>
-              <Text>&middot;</Text>
-              <Text>{data?.rooms} rooms</Text>
-            </HStack>
-          </Skeleton>
-        </VStack>
-        <Avatar size={"lg"} name={data?.owner.name} src={data?.owner.avatar} />
-      </HStack>
+      <Box mt={10} w="60%">
+        <HStack justifyContent={"space-between"}>
+          <VStack alignItems={"flex-start"}>
+            <Skeleton isLoaded={!isLoading}>
+              <Heading as={"h3"} size={"lg"}>
+                House hosted by {data?.owner.name}
+              </Heading>
+            </Skeleton>
+            <Skeleton isLoaded={!isLoading}>
+              <HStack justifyContent={"flex-start"} w="100%">
+                <Text>{data?.toilets} toliets</Text>
+                <Text>&middot;</Text>
+                <Text>{data?.rooms} rooms</Text>
+              </HStack>
+            </Skeleton>
+          </VStack>
+          <Avatar
+            size={"lg"}
+            name={data?.owner.name}
+            src={data?.owner.avatar}
+          />
+        </HStack>
 
-      {/* Reviews Area */}
-      <Box mt={10}>
-        <Heading as={"h3"} size={"lg"}>
-          <HStack>
-            <FaStar />
-            <Text>{data?.rating}</Text>
-            <Text>&middot;</Text>
-            <Text>{reviewsData?.length} reviews</Text>
-          </HStack>
-        </Heading>
+        {/* Reviews Area */}
+        {isLoading ? null : <ReviewList room={data as IRoomDetail} />}
       </Box>
     </Box>
   );
