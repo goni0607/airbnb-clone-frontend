@@ -19,3 +19,10 @@ export const getRoomReviews = ({queryKey}: QueryFunctionContext) => {
     const [, roomPk] = queryKey;
     return axiosInstance.get(`/rooms/${roomPk}/reviews`).then(response => response.data);
 }
+
+
+export const getMe = async () => {
+    const response = await axiosInstance.get(`/users/me/`);
+    return response.data;
+}
+
