@@ -24,7 +24,7 @@ export default function Room({ pk, imageUrl, name, rating, city, country, price 
             <FaRegHeart size={24} />
           </Button>
         </Box>
-        <Grid gap={2} templateColumns={"6fr 1fr"}>
+        <Grid w={"100%"} gap={2} templateColumns={"6fr 1fr"}>
           <Text as={"strong"} noOfLines={1} fontSize="md">
             {name}
           </Text>
