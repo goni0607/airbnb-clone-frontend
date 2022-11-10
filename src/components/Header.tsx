@@ -4,13 +4,19 @@ import {
   Button,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { logOut } from "../api";
 import useUser from "../lib/useUser";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
@@ -33,6 +39,27 @@ export default function Header() {
     "Toggle dark mode",
     "Toggle light mode"
   );
+  const toast = useToast();
+  const onLogOut = async () => {
+    const toastId = toast({
+      title: "Login out...",
+      description: "Sad to see you go...",
+      status: "loading",
+      position: "bottom-right",
+      variant: "left-accent",
+    });
+    /* const data = await logOut();
+    console.log(data); */
+    setTimeout(() => {
+      toast.update(toastId, {
+        title: "Log out",
+        description: "See you later!",
+        status: "success",
+        duration: null,
+        isClosable: true,
+      });
+    }, 3000);
+  };
   return (
     <Stack
       py={5}
@@ -64,7 +91,14 @@ export default function Header() {
               </Button>
             </>
           ) : (
-            <Avatar size={"md"} name={user.name} src={user.avatar} />
+            <Menu>
+              <MenuButton>
+                <Avatar size={"md"} name={user.name} src={user.avatar} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onLogOut}>Log out</MenuItem>
+              </MenuList>
+            </Menu>
           )
         ) : null}
         <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />

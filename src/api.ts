@@ -27,3 +27,6 @@ export const getMe = async () => {
   const response = await axiosInstance.get(`/users/me/`);
   return response.data;
 };
+
+export const logOut = async () =>
+  await axiosInstance.post(`/users/log-out/`).then((response) => response.data);
