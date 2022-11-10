@@ -64,7 +64,7 @@ export default function Header() {
               </Button>
             </>
           ) : (
-            <Avatar size={"md"} />
+            <Avatar size={"md"} name={user.name} src={user.avatar} />
           )
         ) : null}
         <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
