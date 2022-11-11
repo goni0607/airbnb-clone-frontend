@@ -37,3 +37,19 @@ export const logOut = async () =>
       },
     })
     .then((response) => response.data);
+
+/**
+ * Github Login
+ */
+export const githubLogIn = (code: string) =>
+  axiosInstance
+    .post(
+      `/users/github/`,
+      { code },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
+    .then((response) => response.status);
