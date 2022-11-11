@@ -12,6 +12,7 @@ export default function KakaoConfirm() {
   const confirmLogin = async () => {
     const params = new URLSearchParams(search);
     const code = params.get("code");
+    console.log(code);
     if (code) {
       const status = await kakaoLogIn(code);
       if (status === 200) {
