@@ -53,3 +53,19 @@ export const githubLogIn = (code: string) =>
       }
     )
     .then((response) => response.status);
+
+/**
+ * kakao Login
+ */
+export const kakaoLogIn = (code: string) =>
+  axiosInstance
+    .post(
+      `/users/kakao/`,
+      { code },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
+    .then((response) => response.status);
