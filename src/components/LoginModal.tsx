@@ -15,7 +15,6 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
 import { FaLock, FaUserCircle } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

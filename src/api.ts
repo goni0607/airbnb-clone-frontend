@@ -101,3 +101,28 @@ export const usernameLogIn = ({
       }
     )
     .then((response) => response.data);
+
+export interface IUsernameSignUpVariables {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
+export const usernameSignUp = ({
+  name,
+  email,
+  username,
+  password,
+}: IUsernameSignUpVariables) =>
+  axiosInstance
+    .post(
+      `/users/`,
+      { name, email, username, password },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
+    .then((response) => response.data);
