@@ -20,26 +20,34 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { FaBed, FaMoneyBill, FaToilet } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { getAmenities, getRoomCategories, uploadRoom } from "../api";
 import ProtectedPage from "../components/ProtectedPage";
 import useHostOnly from "../lib/useHostOnly";
 import useLoginOnly from "../lib/useLoginOnly";
-import { IAmenity, ICategory, IUploadRoomVariables } from "../types";
+import {
+  IAmenity,
+  ICategory,
+  IRoomDetail,
+  IUploadRoomVariables,
+} from "../types";
 
 export default function UploadRoom() {
   useLoginOnly();
   useHostOnly();
-  const { register, watch, handleSubmit } = useForm<IUploadRoomVariables>();
+  const { register, handleSubmit } = useForm<IUploadRoomVariables>();
   const toast = useToast();
+  const navigate = useNavigate();
   const mutation = useMutation(uploadRoom, {
     onMutate: () => {},
-    onSuccess: () => {
+    onSuccess: (data: IRoomDetail) => {
       toast({
         status: "success",
         title: "Room created",
         position: "top",
         variant: "left-accent",
       });
+      navigate(`/rooms/${data.id}`);
     },
     onError: () => {},
   });
