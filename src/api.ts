@@ -126,3 +126,9 @@ export const usernameSignUp = ({
       }
     )
     .then((response) => response.data);
+
+export const getAmenities = () =>
+  axiosInstance.get(`/rooms/amenities/`).then((response) => response.data);
+
+export const getRoomCategories = () =>
+  axiosInstance.get(`/categories/rooms/`).then((response) => response.data);
