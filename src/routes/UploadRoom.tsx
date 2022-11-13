@@ -12,81 +12,138 @@ import {
   InputGroup,
   InputLeftAddon,
   Select,
+  Text,
   Textarea,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { FaBed, FaMoneyBill, FaToilet } from "react-icons/fa";
-import { getAmenities, getRoomCategories } from "../api";
+import { getAmenities, getRoomCategories, uploadRoom } from "../api";
 import ProtectedPage from "../components/ProtectedPage";
 import useHostOnly from "../lib/useHostOnly";
 import useLoginOnly from "../lib/useLoginOnly";
-import { IAmenity, ICategory } from "../types";
+import { IAmenity, ICategory, IUploadRoomVariables } from "../types";
 
 export default function UploadRoom() {
   useLoginOnly();
   useHostOnly();
+  const { register, watch, handleSubmit } = useForm<IUploadRoomVariables>();
+  const toast = useToast();
+  const mutation = useMutation(uploadRoom, {
+    onMutate: () => {},
+    onSuccess: () => {
+      toast({
+        status: "success",
+        title: "Room created",
+        position: "top",
+        variant: "left-accent",
+      });
+    },
+    onError: () => {},
+  });
   const { data: amenities, isLoading: isAmenitiesLoading } = useQuery<
     IAmenity[]
   >(["amenities"], getAmenities);
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<
     ICategory[]
   >(["categories"], getRoomCategories);
-
+  const onSubmit = (data: IUploadRoomVariables) => {
+    mutation.mutate(data);
+  };
   return (
     <ProtectedPage>
       <Box pb={40} mt={10} px={{ base: 10, lg: 40 }}>
         <Container>
           <Heading textAlign={"center"}>Upload Room</Heading>
-          <VStack spacing={6} as={"form"} mt={6}>
+          <VStack
+            spacing={6}
+            as={"form"}
+            mt={6}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <FormControl>
               <FormLabel>Name</FormLabel>
-              <Input required type={"text"} />
+              <Input
+                {...register("name", { required: true })}
+                required
+                type={"text"}
+              />
               <FormHelperText>Write the name of your room.</FormHelperText>
             </FormControl>
             <FormControl>
               <FormLabel>Country</FormLabel>
-              <Input required type={"text"} />
+              <Input
+                {...register("country", { required: true })}
+                required
+                type={"text"}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>City</FormLabel>
-              <Input required type={"text"} />
+              <Input
+                {...register("city", { required: true })}
+                required
+                type={"text"}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Address</FormLabel>
-              <Input required type={"text"} />
+              <Input
+                {...register("address", { required: true })}
+                required
+                type={"text"}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Price</FormLabel>
               <InputGroup>
                 <InputLeftAddon children={<FaMoneyBill />} />
-                <Input required type={"number"} />
+                <Input
+                  {...register("price", { required: true })}
+                  required
+                  type={"number"}
+                />
               </InputGroup>
             </FormControl>
             <FormControl>
               <FormLabel>Rooms</FormLabel>
               <InputGroup>
                 <InputLeftAddon children={<FaBed />} />
-                <Input required type={"number"} />
+                <Input
+                  {...register("rooms", { required: true })}
+                  required
+                  type={"number"}
+                />
               </InputGroup>
             </FormControl>
             <FormControl>
               <FormLabel>Toirets</FormLabel>
               <InputGroup>
                 <InputLeftAddon children={<FaToilet />} />
-                <Input required type={"number"} />
+                <Input
+                  {...register("toilets", { required: true })}
+                  required
+                  type={"number"}
+                />
               </InputGroup>
             </FormControl>
             <FormControl>
               <FormLabel>Description</FormLabel>
-              <Textarea />
+              <Textarea {...register("description", { required: true })} />
             </FormControl>
             <FormControl>
-              <Checkbox>Pet Friendly?</Checkbox>
+              <Checkbox {...register("pet_friendly", { required: true })}>
+                Pet Friendly?
+              </Checkbox>
             </FormControl>
             <FormControl>
               <FormLabel>Kind of room</FormLabel>
-              <Select placeholder="Choose a kind">
+              <Select
+                {...register("kind", { required: true })}
+                placeholder="Choose a kind"
+              >
                 <option value="entire_place">Entire Place</option>
                 <option value="private_room">Private Room</option>
                 <option value="shared_room">Shared Room</option>
@@ -97,7 +154,10 @@ export default function UploadRoom() {
             </FormControl>
             <FormControl>
               <FormLabel>Category</FormLabel>
-              <Select placeholder="Choose a kind">
+              <Select
+                {...register("category", { required: true })}
+                placeholder="Choose a kind"
+              >
                 {categories?.map((category) => (
                   <option key={category.pk} value={category.pk}>
                     {category.name}
@@ -113,13 +173,27 @@ export default function UploadRoom() {
               <Grid templateColumns={"1fr 1fr"} gap={4}>
                 {amenities?.map((amenity) => (
                   <Box key={amenity.pk}>
-                    <Checkbox>{amenity.name}</Checkbox>
+                    <Checkbox
+                      value={amenity.pk}
+                      {...register("amenities", { required: true })}
+                    >
+                      {amenity.name}
+                    </Checkbox>
                     <FormHelperText>{amenity.description}</FormHelperText>
                   </Box>
                 ))}
               </Grid>
             </FormControl>
-            <Button colorScheme={"red"} size={"lg"} w={"100%"}>
+            {mutation.isError ? (
+              <Text color="red.600">Something went wrong</Text>
+            ) : null}
+            <Button
+              type="submit"
+              isLoading={mutation.isLoading}
+              colorScheme={"red"}
+              size={"lg"}
+              w={"100%"}
+            >
               Upload Room
             </Button>
           </VStack>

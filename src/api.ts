@@ -1,6 +1,7 @@
 import Cookie from "js-cookie";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
+import { IUploadRoomVariables } from "./types";
 
 const axiosInstance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/v1",
@@ -132,3 +133,12 @@ export const getAmenities = () =>
 
 export const getRoomCategories = () =>
   axiosInstance.get(`/categories/rooms/`).then((response) => response.data);
+
+export const uploadRoom = (variables: IUploadRoomVariables) =>
+  axiosInstance
+    .post(`/rooms/`, variables, {
+      headers: {
+        "X-CSRFToken": Cookie.get("csrftoken") || "",
+      },
+    })
+    .then((response) => response.data);
