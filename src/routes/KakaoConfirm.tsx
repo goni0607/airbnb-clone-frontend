@@ -1,6 +1,5 @@
 import { Heading, Spinner, Text, useToast, VStack } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { m } from "framer-motion";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { kakaoLogIn } from "../api";
