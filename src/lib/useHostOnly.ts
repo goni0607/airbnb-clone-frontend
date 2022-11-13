@@ -11,6 +11,6 @@ export default function useHostOnly() {
         navigate("/");
       }
     }
-  }, [isUserLoading, user.is_host, navigate]);
+  }, [isUserLoading, user?.is_host, navigate]);
   return;
 }
