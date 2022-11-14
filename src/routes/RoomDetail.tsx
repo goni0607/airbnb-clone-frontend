@@ -10,11 +10,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { getRoom } from "../api";
 import ReviewList from "../components/ReviewList";
 import { IRoomDetail } from "../types";
+import { useState } from "react";
 
 export default function RoomDetail() {
   const { roomPk } = useParams();
@@ -22,6 +25,7 @@ export default function RoomDetail() {
     ["/rooms/", roomPk],
     getRoom
   );
+  const [dates, setDates] = useState<Date>();
 
   return (
     <Box px={{ base: 5, md: 10, xl: 20 }} my={10}>
@@ -45,44 +49,69 @@ export default function RoomDetail() {
             key={index}
           >
             <Skeleton isLoaded={!isLoading} w="100%" h="100%">
-              {data?.photos && data.photos.length > 0 ? (
+              {data?.photos && data.photos[index] ? (
                 <Image
                   w="100%"
                   h="100%"
                   objectFit={"cover"}
                   src={data?.photos[index].file}
                 />
-              ) : null}
+              ) : (
+                <HStack
+                  w="100%"
+                  h="100%"
+                  bgColor={"gray.100"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
+                  <Text color={"gray.600"} fontWeight={"bold"}>
+                    No Image
+                  </Text>
+                </HStack>
+              )}
             </Skeleton>
           </GridItem>
         ))}
       </Grid>
-      <Box mt={10} w="60%">
-        <HStack justifyContent={"space-between"}>
-          <VStack alignItems={"flex-start"}>
-            <Skeleton isLoaded={!isLoading}>
-              <Heading as={"h3"} size={"lg"}>
-                House hosted by {data?.owner.name}
-              </Heading>
-            </Skeleton>
-            <Skeleton isLoaded={!isLoading}>
-              <HStack justifyContent={"flex-start"} w="100%">
-                <Text>{data?.toilets} toliets</Text>
-                <Text>&middot;</Text>
-                <Text>{data?.rooms} rooms</Text>
-              </HStack>
-            </Skeleton>
-          </VStack>
-          <Avatar
-            size={"lg"}
-            name={data?.owner.name}
-            src={data?.owner.avatar}
-          />
-        </HStack>
+      <Grid templateColumns={"2fr 1fr"} mt={12} columnGap={8}>
+        <Box>
+          <HStack justifyContent={"space-between"}>
+            <VStack alignItems={"flex-start"}>
+              <Skeleton isLoaded={!isLoading}>
+                <Heading as={"h3"} size={"lg"}>
+                  House hosted by {data?.owner.name}
+                </Heading>
+              </Skeleton>
+              <Skeleton isLoaded={!isLoading}>
+                <HStack justifyContent={"flex-start"} w="100%">
+                  <Text>{data?.toilets} toliets</Text>
+                  <Text>&middot;</Text>
+                  <Text>{data?.rooms} rooms</Text>
+                </HStack>
+              </Skeleton>
+            </VStack>
+            <Avatar
+              size={"lg"}
+              name={data?.owner.name}
+              src={data?.owner.avatar}
+            />
+          </HStack>
 
-        {/* Reviews Area */}
-        {isLoading ? null : <ReviewList room={data as IRoomDetail} />}
-      </Box>
+          {/* Reviews Area */}
+          {isLoading ? null : <ReviewList room={data as IRoomDetail} />}
+        </Box>
+        <Box>
+          <Calendar
+            onChange={setDates}
+            selectRange
+            minDate={new Date()}
+            maxDate={new Date(Date.now() + 60 * 60 * 24 * 90 * 1000)}
+            minDetail={"month"}
+            next2Label={null}
+            prev2Label={null}
+          />
+        </Box>
+      </Grid>
     </Box>
   );
 }

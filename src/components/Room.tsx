@@ -42,8 +42,18 @@ export default function Room({
   return (
     <Link to={`/rooms/${pk}`}>
       <VStack w="100%" alignItems={"flex-start"} spacing="0">
-        <Box position={"relative"} rounded="2xl" overflow="hidden" mb={3}>
-          <Image w="100%" h="260px" src={imageUrl} />
+        <Box
+          position={"relative"}
+          w="100%"
+          rounded="2xl"
+          overflow="hidden"
+          mb={3}
+        >
+          {imageUrl ? (
+            <Image w="100%" h="260px" objectFit={"cover"} src={imageUrl} />
+          ) : (
+            <Box w="100%" h="260px" bgColor={"gray.100"}></Box>
+          )}
           <Button
             variant={"unstyled"}
             position={"absolute"}
